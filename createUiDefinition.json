@@ -1,0 +1,299 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Azure.CreateUIDef",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "config": {
+            "isWizard": false,
+            "basics": {
+                "description": "**Microsoft Sentinel All-In-One** deployment, see more information about this project [here](https://github.com/alpenshield/Rapid-Sentinel-Deployment).",
+                "location": {
+                    "label": "Location",
+                    "toolTip": "Location for all resources",
+                    "resourceTypes": [
+                        "Microsoft.OperationalInsights/workspaces"
+                    ]
+                }
+            }
+        },
+        "basics": [
+            {
+                "name": "rgName",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Resource Group name",
+                "placeholder": "",
+                "defaultValue": "",
+                "toolTip": "Enter a resource group name",
+                "constraints": {
+                    "required": true,
+                    "regex": "^[A-Za-z0-9][A-Za-z0-9-]+[A-Za-z0-9]$",
+                    "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                },
+                "visible": true  
+            },
+            {
+                "name": "workspaceName",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Workspace Name",
+                "placeholder": "",
+                "defaultValue": "",
+                "toolTip": "The Workspace name should include 4-63 letters, digits or '-'. The '-' shouldn't be the first or the last symbol.",
+                "constraints": {
+                    "required": true,
+                    "regex": "^[A-Za-z0-9][A-Za-z0-9-]+[A-Za-z0-9]$",
+                    "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                },
+                "visible": true
+            },
+            {
+                "name": "dailyQuota",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Daily ingestion limit in GBs. Enter 0 for no limit.",
+                "placeholder": "",
+                "defaultValue": "0",
+                "toolTip": "This limit doesn't apply to the following tables: SecurityAlert, SecurityBaseline, SecurityBaselineSummary, SecurityDetection, SecurityEvent, WindowsFirewall, MaliciousIPCommunication, LinuxAuditLog, SysmonEvent, ProtectionStatus, WindowsEvent. [Learn more](https://learn.microsoft.com/azure/azure-monitor/logs/daily-cap)",
+                "constraints": {
+                    "required": true,
+                    "regex": "^[0-9]{1,4}$",
+                    "validationMessage": "Only numbers allowed, and the value must be 1-4 characters long."
+                },
+                "visible": true
+            },
+            {
+                "name": "dataRetention",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Number of days of retention",
+                "placeholder": "",
+                "defaultValue": "90",
+                "toolTip": "Only numbers allowed",
+                "constraints": {
+                    "required": true,
+                    "regex": "([3-8][0-9]|9[0-9]|[1-6][0-9]{2}|7[0-2][0-9]|730)",
+                    "validationMessage": "Retention must be between 30 and 730 days."
+                },
+                "visible": true
+            },
+            {
+                "name": "pricingTier",
+                "type": "Microsoft.Common.DropDown",
+                "label": "Select pricing tier for Sentinel and Log Analytics",
+                "placeholder": "",
+                "multiselect": false,
+                "toolTip": "Visit [Azure Monitor Pricing page](https://azure.microsoft.com/pricing/details/monitor/) for more information.",
+                "defaultValue": [{"value": "PerGB2018"}],
+                "constraints": {
+                    "allowedValues": [
+                        {
+                            "label": "Pay-as-you-go",
+                            "value": "PerGB2018"
+                        },
+                        {
+                            "label": "Commitment Tier",
+                            "value": "CapacityReservation"
+                        }
+                    ],
+                    "required": true
+                },
+                "visible": true
+            },
+            {
+                "name": "capacityReservation",
+                "type": "Microsoft.Common.DropDown",
+                "label": "Select Commitment Tier for Sentinel and Log Analytics",
+                "placeholder": "",
+                "multiselect": false,
+                "defaultValue": 100,
+                "toolTip": "Select the Commitment Tier in GB/day",
+                "constraints": {
+                    "allowedValues": [
+                        {
+                            "label": "100 GB",
+                            "value": 100
+                        },
+                        {
+                            "label": "200 GB",
+                            "value": 200
+                        },
+                        {
+                            "label": "300 GB",
+                            "value": 300
+                        },
+                        {
+                            "label": "400 GB",
+                            "value": 400
+                        },
+                        {
+                            "label": "500 GB",
+                            "value": 500
+                        },
+                        {
+                            "label": "1000 GB",
+                            "value": 1000
+                        },
+                        {
+                            "label": "2000 GB",
+                            "value": 2000
+                        },
+                        {
+                            "label": "5000 GB",
+                            "value": 5000
+                        }
+                    ],
+                    "required": true
+                },
+                "visible": "[if(equals(basics('pricingTier'),'CapacityReservation'), true, false)]"
+            }
+          ],
+          "steps": [
+          {
+              "name": "dataConnectors",
+              "label": "Data connectors",
+              "elements": [
+                  {
+                      "name": "infoBoxConnectors",
+                      "type": "Microsoft.Common.InfoBox",
+                      "visible": true,
+                      "options": {
+                          "icon": "Info",
+                          "text": "Please select which Data Connectors you would like to configure in your Microsoft Sentinel environment",
+                          "uri": "https://learn.microsoft.com/azure/sentinel/data-connectors-reference"
+                      }
+                  },
+                  {
+                      "name": "enableDataConnectors",
+                      "type": "Microsoft.Common.DropDown",
+                      "label": "Select data connectors to onboard",
+                      "placeholder": "",
+                      "multiselect": true,
+                      "filter": true,
+                      "filterPlaceholder": "Filter items ...",
+                      "multiLine": true,
+                      "defaultDescription": "A value for selection",
+                      "toolTip": "Select the data connectors that you would like to enable",
+                      "constraints": {
+                          "allowedValues": [
+                            {
+                                "label": "Microsoft Entra ID",
+                                "description": "Relevant license and Global Admin or Security Admin permission required.",
+                                "value": "AzureActiveDirectory"
+                            },  
+                            {
+                                "label": "Microsoft Entra ID Identity Protection",
+                                "description": "Relevant license and Global Admin or Security Admin permission required.",
+                                "value": "AzureActiveDirectoryIDP"
+                            },
+                            {
+                                "label": "Azure Activity",
+                                "description": "This will only bring logs from the subscription selected in Basics tab. Relevant permissions at the subscription level are required.",
+                                "value": "AzureActivity"
+                            },
+                            {
+                                "label": "Microsoft 365 Defender XDR",
+                                "description": "This will only enable incident and alert synchronization, no advanced hunting data will be enabled. Relevant license and Global Admin or Security Admin permission required",
+                                "value": "Microsoft365Defender"
+                            },
+                            {
+                                "label": "Office 365",
+                                "description": "Relevant license and Global Admin or Security Admin permission required",
+                                "value": "Office365"
+                            }
+                          ],
+                          "required": true
+                      },
+                      "visible": true
+                  },
+                  {
+                    "name": "aadStreams",
+                      "type": "Microsoft.Common.DropDown",
+                      "label": "Select Azure Active Directory log types to enable",
+                      "placeholder": "",
+                      "multiselect": true,
+                      "defaultValue": [{"value": "SignInLogs"}, {"value": "AuditLogs"}],
+                      "toolTip": "Select Azure Active Directory log types you would like to stream to the workspace",
+                      "constraints": {
+                          "allowedValues": [
+                              {
+                                  "label": "Signin Logs",
+                                  "value": "SignInLogs"
+                              },
+                              {
+                                  "label": "Audit Logs",
+                                  "value": "AuditLogs"
+                              },
+                              {
+                                  "label": "Non-Interactive User Sign-In Log (Preview)",
+                                  "value": "NonInteractiveUserSignInLogs"
+                              },
+                              {
+                                  "label": "Service Principal Sign-In Logs (Preview)",
+                                  "value": "ServicePrincipalSignInLogs"
+                              },
+                              {
+                                  "label": "Managed Identity Sign-In Logs (Preview)",
+                                  "value": "ManagedIdentitySignInLogs"
+                              },
+                              {
+                                  "label": "Provisioning Logs (Preview)",
+                                  "value": "ProvisioningLogs"
+                              },
+                              {
+                                  "label": "ADFS Sign-In Logs (Preview)",
+                                  "value": "ADFSSignInLogs"
+                              },
+                              {
+                                  "label": "User Risk Events (Preview)",
+                                  "value": "UserRiskEvents"
+                              },
+                              {
+                                  "label": "Risky Users (Preview)",
+                                  "value": "RiskyUsers"
+                              },
+                              {
+                                  "label": "Network Access Traffic Logs (Preview)",
+                                  "value": "NetworkAccessTrafficLogs"
+                              },
+                              {
+                                  "label": "Risky Service Principals (Preview)",
+                                  "value": "RiskyServicePrincipals"
+                              },
+                              {
+                                  "label": "Service Principal Risk Events (Preview)",
+                                  "value": "ServicePrincipalRiskEvents"
+                              }
+                          ],
+                          "required": false
+                      },
+                      "visible": "[if(contains(steps('dataConnectors').enableDataConnectors,'AzureActiveDirectory'),true,false)]"
+                  }
+              ]
+          },
+          {
+              "name": "analyticsRules",
+              "label": "Analytics Rules",
+              "elements": [
+                  {
+                      "name": "infoBoxRules",
+                      "type": "Microsoft.Common.InfoBox",
+                      "visible": true,
+                      "options": {
+                          "icon": "Info",
+                          "text": "Please reach out to Contoso@contoso.com to deploy the rules.",
+                          "uri": "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+                      }
+                  }
+              ]
+          }
+        ],
+        "outputs": {
+            "workspaceName": "[basics('workspaceName')]",
+            "dailyQuota": "[basics('dailyQuota')]",
+            "dataRetention": "[basics('dataRetention')]",
+            "pricingTier": "[basics('pricingTier')]",
+            "capacityReservation": "[basics('capacityReservation')]",
+            "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
+            "aadStreams": "[steps('dataConnectors').aadStreams]",
+            "location": "[location()]",
+            "rgName": "[basics('rgName')]"
+        }
+    }
+}
