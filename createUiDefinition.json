@@ -6,7 +6,7 @@
         "config": {
             "isWizard": false,
             "basics": {
-                "description": "**Microsoft Sentinel All-In-One** deployment, see more information about this project [here](https://github.com/alpenshield/Rapid-Sentinel-Deployment).",
+                "description": "AlpenShield's Rapid-Sentinel-Deployment utilizes an ARM template for streamlined integration of Microsoft Sentinel and the most relevant log sources. This expedites the incorporation of Sentinel into your existing environment, laying a solid foundation for swift and efficient operations. See more information about this project [here](https://alpenshield.io/en/services/managed-sentinel).",
                 "location": {
                     "label": "Location",
                     "toolTip": "Location for all resources",
