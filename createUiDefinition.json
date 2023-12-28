@@ -198,7 +198,7 @@
                                 "value": "Office365"
                             }
                           ],
-                          "required": true
+                          "required": false
                       },
                       "visible": true
                   },
@@ -264,22 +264,6 @@
                           "required": false
                       },
                       "visible": "[if(contains(steps('dataConnectors').enableDataConnectors,'AzureActiveDirectory'),true,false)]"
-                  }
-              ]
-          },
-          {
-              "name": "analyticsRules",
-              "label": "Analytics Rules",
-              "elements": [
-                  {
-                      "name": "infoBoxRules",
-                      "type": "Microsoft.Common.InfoBox",
-                      "visible": true,
-                      "options": {
-                          "icon": "Info",
-                          "text": "Please reach out to Contoso@contoso.com to deploy the rules.",
-                          "uri": "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
-                      }
                   }
               ]
           }
