@@ -217,6 +217,7 @@
                         "value": "[parameters('workspaceName')]"
                     },
                     "severityLevels": {
+                        "value": ""
                     },
                     "enableAlerts": {
                         "value": false
