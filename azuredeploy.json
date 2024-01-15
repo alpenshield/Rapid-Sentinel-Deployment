@@ -219,7 +219,7 @@
                     "severityLevels": {
                     },
                     "enableAlerts": {
-                        "value": ""
+                        "value": false
                     },
                     "location": {
                         "value": "[parameters('location')]"
