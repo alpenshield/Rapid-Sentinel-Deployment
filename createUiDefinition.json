@@ -145,6 +145,75 @@
             }
           ],
           "steps": [
+            {
+                "name": "solutions",
+                "label": "Content Hub Solutions",
+                "elements": [
+                    {
+                        "name": "infoBox1",
+                        "type": "Microsoft.Common.InfoBox",
+                        "visible": true,
+                        "options": {
+                            "icon": "Info",
+                            "text": "Please select which Solutions you want to install into your Microsoft Sentinel environment. Solutions may contain different content types, like data connectors, analytics rules, parsers, workbooks, playbooks, hunting queries, etc.",
+                            "uri": "https://learn.microsoft.com/azure/sentinel/sentinel-solutions-catalog"
+                        }
+                    },
+                    {
+                        "name": "enableSolutions1P",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select Microsoft Content Hub solutions to install",
+                        "placeholder": "",
+                        "multiselect": true,
+                        "filter": true,
+                        "filterPlaceholder": "Filter items ...",
+                        "multiLine": true,
+                        "defaultDescription": "A value for selection",
+                        "toolTip": "Select the Microsoft solutions that you would like to install",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Azure Active Directory",
+                                    "description": "The Azure Active Directory solution for Microsoft Sentinel enables you to ingest Azure Active Directory Audit,Sign-in,Provisioning,Risk Events and Risky User/Service Principal logs using Diagnostic Settings into Microsoft Sentinel.",
+                                    "value": "Azure Active Directory"
+                                },
+                                {
+                                    "label": "Azure Activity",
+                                    "description": "The Azure Activity solution for Microsoft Sentinel enables you to ingest Azure Activity Administrative, Security, Service Health, Alert, Recommendation, Policy, Autoscale and Resource Health logs using Diagnostic Settings into Microsoft Sentinel.",
+                                    "value": "Azure Activity"
+                                },
+                                {
+                                    "label": "Microsoft 365",
+                                    "description": "The Microsoft 365 solution for Microsoft Sentinel enables you to ingest operational logs from Microsoft 365 to gain insights into user and admin activity across your collaboration platforms such as Teams, SharePoint and Exchange.",
+                                    "value": "Microsoft 365"
+                                },
+                                {
+                                    "label": "Microsoft Defender for Cloud",
+                                    "description": "The Microsoft Defender for Cloud solution for Microsoft Sentinel allows you to ingest Security alerts reported in Microsoft Defender for Cloud on assessing your hybrid cloud workload's security posture.",
+                                    "value": "Microsoft Defender for Cloud"
+                                },
+                                {
+                                    "label": "Microsoft Defender for Endpoint",
+                                    "description": "Microsoft Defender for Endpoint is an enterprise endpoint security platform designed to help enterprise networks prevent, detect, investigate, and respond to advanced threats.",
+                                    "value": "Microsoft Defender for Endpoint"
+                                },
+                                {
+                                    "label": "Microsoft Defender for IoT",
+                                    "description": "The Microsoft Defender for IoT solution for Microsoft Sentinel allows you to ingest Security alerts reported in Microsoft Defender for IoT on assessing your Internet of Things (IoT)/Operational Technology (OT) infrastructure.",
+                                    "value": "Microsoft Defender for IoT"
+                                },
+                                {
+                                    "label": "Windows Security Events",
+                                    "description": "The Windows Security Events solution for Microsoft Sentinel allows you to ingest Security events from your Windows machines using the Windows Agent into Microsoft Sentinel. This solution includes two (2) data connectors to help ingest the logs.",
+                                    "value": "Windows Security Events"
+                                }
+                            ],
+                            "required": false
+                        },
+                        "visible": true
+                    }
+                ]
+            },
           {
               "name": "dataConnectors",
               "label": "Data connectors",
@@ -274,6 +343,7 @@
             "dataRetention": "[basics('dataRetention')]",
             "pricingTier": "[basics('pricingTier')]",
             "capacityReservation": "[basics('capacityReservation')]",
+            "enableSolutions1P": "[steps('solutions').enableSolutions1P]",
             "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
             "aadStreams": "[steps('dataConnectors').aadStreams]",
             "location": "[location()]",

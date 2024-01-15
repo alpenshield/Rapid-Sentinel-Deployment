@@ -78,6 +78,13 @@
             },
             "defaultValue": true
         },
+        "enableSolutions1P": {
+            "type": "array",
+            "metadata": {
+                "description": "The list of Content Hub 1st party solutions to deploy."
+            },
+            "defaultValue": []
+        },
         "aadStreams": {
             "type": "array",
             "metadata": {
@@ -172,6 +179,47 @@
                     },
                     "subscriptionId": {
                         "value": "[subscription().subscriptionId]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[not(empty(parameters('enableSolutions1P')))]",
+            "name": "enableSolutionsAndAlerts",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "resourceGroup": "[parameters('rgName')]",
+            "dependsOn": [
+                "workspaceCreation",
+                "[resourceId('Microsoft.Resources/resourceGroups',parameters('rgName'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), 'v2/LinkedTemplates/solutionsAndAlerts.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "enableSolutions1P": {
+                        "value": "[replace(replace(string(parameters('enableSolutions1P')),'[',''),']','')]"
+                    },
+                    "enableSolutionsEssentials": {
+                        "value": "[]"
+                    },
+                    "enableSolutionsTraining": {
+                        "value": "[]"
+                    },
+                    "workspaceName": {
+                        "value": "[parameters('workspaceName')]"
+                    },
+                    "severityLevels": {
+                        "value": "[]"
+                    },
+                    "enableAlerts": {
+                        "value": "false"
                     },
                     "location": {
                         "value": "[parameters('location')]"
